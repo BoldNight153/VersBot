@@ -89,8 +89,6 @@ public class RateLimiter {
     private final Lock lock;
     private final Condition tokensAvailable;
 
-    private static RateLimiter instance;
-
     private RateLimiter() {
         this.tokens = MAX_TOKENS;
         this.lock = new ReentrantLock();
@@ -98,15 +96,12 @@ public class RateLimiter {
         startRefilling();
     }
 
+    private static final class InstanceHolder {
+        static final RateLimiter instance = new RateLimiter();
+    }
+
     public static RateLimiter getInstance() {
-        if (instance == null) {
-            synchronized (RateLimiter.class) {
-                if (instance == null) {
-                    instance = new RateLimiter();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     public void acquireToken() throws InterruptedException {

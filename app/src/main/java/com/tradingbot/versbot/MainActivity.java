@@ -1,484 +1,128 @@
-////package com.tradingbot.smatestbot2;
-////
-////import android.os.Bundle;
-////import android.util.Log;
-////import android.view.View;
-////import android.widget.AdapterView;
-////import android.widget.ListView;
-////import android.widget.Toast;
-////
-////import androidx.appcompat.app.AppCompatActivity;
-////
-////import org.json.JSONArray;
-////import org.json.JSONObject;
-////
-////import java.text.SimpleDateFormat;
-////import java.util.ArrayList;
-////import java.util.Date;
-////import java.util.List;
-////import java.util.Locale;
-////
-////public class MainActivity extends AppCompatActivity {
-////
-////    private static final String TAG = "MainActivity";
-////    private AccountAPI accountAPI;
-////    private ListView accountsListView;
-////    private List<Account> accounts;
-////    private TradingBot tradingBot;
-////
-////    @Override
-////    protected void onCreate(Bundle savedInstanceState) {
-////        super.onCreate(savedInstanceState);
-////        setContentView(R.layout.activity_main);
-////
-////        accountsListView = findViewById(R.id.accountsListView);
-////
-////        // Initialize AccountAPI with base URL and token
-////        accountAPI = new AccountAPI("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544");
-////
-////        // Initialize TradingBot
-////        tradingBot = new TradingBot("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544");
-////
-////        // Fetch accounts and display them
-////        fetchAccounts();
-////    }
-////
-////    private void fetchAccounts() {
-////        new Thread(() -> {
-////            try {
-////                log("Fetching accounts...");
-////                String response = accountAPI.getAccounts();
-////                log("API Response: " + response);
-////                accounts = parseAccounts(response);
-////                log("Parsed Accounts: " + accounts.toString());
-////
-////                runOnUiThread(() -> {
-////                    if (accounts.isEmpty()) {
-////                        Toast.makeText(MainActivity.this, "No accounts found", Toast.LENGTH_SHORT).show();
-////                    } else {
-////                        AccountAdapter adapter = new AccountAdapter(MainActivity.this, accounts);
-////                        accountsListView.setAdapter(adapter);
-////                        accountsListView.setOnItemClickListener((parent, view, position, id) -> {
-////                            Account selectedAccount = accounts.get(position);
-////                            log("Selected Account: " + selectedAccount.toString());
-////                            if (tradingBot.isRunning()) {
-////                                tradingBot.stopTrading();
-////                                selectedAccount.setStatus("Stopped");
-////                                log("Trading stopped for account: " + selectedAccount.getId());
-////                            } else {
-////                                tradingBot.startTrading("EUR_USD", selectedAccount.getId());
-////                                selectedAccount.setStatus("Running");
-////                                log("Trading started for account: " + selectedAccount.getId());
-////                            }
-////                            adapter.notifyDataSetChanged();
-////                        });
-////                    }
-////                });
-////            } catch (Exception e) {
-////                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Failed to fetch accounts", Toast.LENGTH_SHORT).show());
-////                log("Error fetching accounts: " + e.getMessage());
-////            }
-////        }).start();
-////    }
-////
-////    private List<Account> parseAccounts(String response) {
-////        List<Account> accounts = new ArrayList<>();
-////        try {
-////            JSONObject jsonResponse = new JSONObject(response);
-////            JSONArray accountsArray = jsonResponse.getJSONArray("accounts");
-////            for (int i = 0; i < accountsArray.length(); i++) {
-////                JSONObject accountObject = accountsArray.getJSONObject(i);
-////                String id = accountObject.getString("id");
-////                String status = "Stopped"; // Default status
-////                String alias = accountObject.optString("alias", "").trim(); // Get alias if available and trim spaces
-////                if (alias.isEmpty()) {
-////                    alias = "No Alias from Oanda Account"; // Set default alias if alias is null, empty, or contains only spaces
-////                }
-////                Account account = new Account(id, status, alias);
-////                accounts.add(account);
-////                log("Parsed Account: " + account.toString());
-////            }
-////        } catch (Exception e) {
-////            log("Error parsing accounts: " + e.getMessage());
-////        }
-////        return accounts;
-////    }
-////
-////    private void log(String message) {
-////        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
-////        Log.d(TAG, timestamp + " - " + message);
-////    }
-////}
-//
-//
-////package com.tradingbot.smatestbot2;
-////
-////import android.os.Bundle;
-////import android.widget.ListView;
-////import android.widget.Toast;
-////
-////import androidx.appcompat.app.AppCompatActivity;
-////
-////import org.json.JSONArray;
-////import org.json.JSONObject;
-////
-////import java.util.ArrayList;
-////import java.util.List;
-////
-////public class MainActivity extends AppCompatActivity {
-////
-////    private static final String TAG = "MainActivity";
-////    private AccountAPI accountAPI;
-////    private ListView accountsListView;
-////    private List<Account> accounts;
-////    private TradingBot tradingBot;
-////    private Logger logger;
-////
-////    @Override
-////    protected void onCreate(Bundle savedInstanceState) {
-////        super.onCreate(savedInstanceState);
-////        setContentView(R.layout.activity_main);
-////
-////        accountsListView = findViewById(R.id.accountsListView);
-////        logger = Logger.getInstance(this);
-////
-////        // Initialize AccountAPI with base URL and token
-////        accountAPI = new AccountAPI("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544");
-////
-////        // Initialize TradingBot
-////        tradingBot = new TradingBot("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544");
-////
-////        // Fetch accounts and display them
-////        fetchAccounts();
-////    }
-////
-////    private void fetchAccounts() {
-////        new Thread(() -> {
-////            try {
-////                logger.log("Fetching accounts...");
-////                String response = accountAPI.getAccounts();
-////                logger.log("API Response: " + response);
-////                accounts = parseAccounts(response);
-////                logger.log("Parsed Accounts: " + accounts.toString());
-////
-////                runOnUiThread(() -> {
-////                    if (accounts.isEmpty()) {
-////                        Toast.makeText(MainActivity.this, "No accounts found", Toast.LENGTH_SHORT).show();
-////                    } else {
-////                        AccountAdapter adapter = new AccountAdapter(MainActivity.this, accounts);
-////                        accountsListView.setAdapter(adapter);
-////                        accountsListView.setOnItemClickListener((parent, view, position, id) -> {
-////                            Account selectedAccount = accounts.get(position);
-////                            logger.log("Selected Account: " + selectedAccount.toString());
-////                            if (tradingBot.isRunning()) {
-////                                tradingBot.stopTrading();
-////                                selectedAccount.setStatus("Stopped");
-////                                logger.log("Trading stopped for account: " + selectedAccount.getId());
-////                            } else {
-////                                tradingBot.startTrading("EUR_USD", selectedAccount.getId());
-////                                selectedAccount.setStatus("Running");
-////                                logger.log("Trading started for account: " + selectedAccount.getId());
-////                            }
-////                            adapter.notifyDataSetChanged();
-////                        });
-////                    }
-////                });
-////            } catch (Exception e) {
-////                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Failed to fetch accounts", Toast.LENGTH_SHORT).show());
-////                logger.log("Error fetching accounts: " + e.getMessage());
-////            }
-////        }).start();
-////    }
-////
-////    private List<Account> parseAccounts(String response) {
-////        List<Account> accounts = new ArrayList<>();
-////        try {
-////            JSONObject jsonResponse = new JSONObject(response);
-////            JSONArray accountsArray = jsonResponse.getJSONArray("accounts");
-////            for (int i = 0; i < accountsArray.length(); i++) {
-////                JSONObject accountObject = accountsArray.getJSONObject(i);
-////                String id = accountObject.getString("id");
-////                String status = "Stopped"; // Default status
-////                String alias = accountObject.optString("alias", "").trim(); // Get alias if available and trim spaces
-////                if (alias.isEmpty()) {
-////                    alias = "No Alias from Oanda Account"; // Set default alias if alias is null, empty, or contains only spaces
-////                }
-////                Account account = new Account(id, status, alias);
-////                accounts.add(account);
-////                logger.log("Parsed Account: " + account.toString());
-////            }
-////        } catch (Exception e) {
-////            logger.log("Error parsing accounts: " + e.getMessage());
-////        }
-////        return accounts;
-////    }
-////}
-
-
-//package com.tradingbot.versbot;
-//
-//import android.os.Bundle;
-//import android.util.Log;
-//import android.widget.ListView;
-//import android.widget.Toast;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import org.json.JSONArray;
-//import org.json.JSONObject;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class MainActivity extends AppCompatActivity {
-//
-//    private static final String TAG = "MainActivity";
-//    private AccountAPI accountAPI;
-//    private ListView accountsListView;
-//    private List<Account> accounts;
-//    private TradingBot tradingBot;
-//    private Logger logger;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        accountsListView = findViewById(R.id.accountsListView);
-//        logger = Logger.getInstance(this);
-//
-//        // Initialize AccountAPI with base URL and token
-//        accountAPI = new AccountAPI("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544", this);
-//
-//        // Initialize TradingBot
-//        tradingBot = new TradingBot("https://api-fxpractice.oanda.com", "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544", this);
-//
-//        // Fetch accounts and display them
-//        fetchAccounts();
-//    }
-//
-//    private void fetchAccounts() {
-//        new Thread(() -> {
-//            try {
-//                logger.log("Fetching accounts...");
-//                String response = accountAPI.getAccounts();
-//                Log.d("Direct response from getAccounts(): ", response);
-//                logger.log("API Response: " + response);
-//                accounts = parseAccounts(response);
-//                logger.log("Parsed Accounts: " + accounts.toString());
-//
-//                runOnUiThread(() -> {
-//                    if (accounts.isEmpty()) {
-//                        Toast.makeText(MainActivity.this, "No accounts found", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        AccountAdapter adapter = new AccountAdapter(MainActivity.this, accounts);
-//                        accountsListView.setAdapter(adapter);
-//                        accountsListView.setOnItemClickListener((parent, view, position, id) -> {
-//                            Account selectedAccount = accounts.get(position);
-//                            logger.log("Selected Account: " + selectedAccount.toString());
-//                            if (tradingBot.isRunning()) {
-//                                tradingBot.stopTrading();
-//                                selectedAccount.setStatus("Stopped");
-//                                logger.log("Trading stopped for account: " + selectedAccount.getId());
-//                            } else {
-//                                tradingBot.startTrading("EUR_USD", selectedAccount.getId());
-//                                selectedAccount.setStatus("Running");
-//                                logger.log("Trading started for account: " + selectedAccount.getId());
-//                            }
-//                            adapter.notifyDataSetChanged();
-//                        });
-//                    }
-//                });
-//            } catch (Exception e) {
-//                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Failed to fetch accounts", Toast.LENGTH_SHORT).show());
-//                logger.log("Error fetching accounts: " + e.getMessage());
-//            }
-//        }).start();
-//    }
-//
-//    private List<Account> parseAccounts(String response) {
-//
-//        List<Account> accounts = new ArrayList<>();
-//        try {
-//            JSONObject jsonResponse = new JSONObject(response);
-//            Log.d("Accounts response: ", jsonResponse.toString());
-//            JSONArray accountsArray = jsonResponse.getJSONArray("accounts");
-//            for (int i = 0; i < accountsArray.length(); i++) {
-//                JSONObject accountObject = accountsArray.getJSONObject(i);
-//                String id = accountObject.getString("id");
-//                String status = "Stopped"; // Default status
-//                String alias = accountObject.optString("alias", "").trim(); // Get alias if available and trim spaces
-//                if (alias.isEmpty()) {
-//                    alias = "No Alias from Oanda Account"; // Set default alias if alias is null, empty, or contains only spaces
-//                }
-//                Account account = new Account(id, status, alias);
-//                accounts.add(account);
-//                logger.log("Parsed Account: " + account.toString());
-//            }
-//        } catch (Exception e) {
-//            logger.log("Error parsing accounts: " + e.getMessage());
-//        }
-//        return accounts;
-//    }
-//}
-
 package com.tradingbot.versbot;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
 import android.view.View;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONArray;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Button;
 import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
-    private static final String ACCESS_TOKEN = "47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544";
-    private static final String TAG = "MainActivity";
-
-    private Button getAccountsButton;
-    private Button getAccountSummaryButton;
-    private TextView responseText;
+    private TextView aliasTextView;
+    private TextView idTextView;
+    private LinearLayout dataLayout;
+    private Account account; // Global scope for Account object
+    private AccountAPI accountAPI; // Global scope for AccountAPI object
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize AccountAPI
+        accountAPI = new AccountAPI(this);
+
         // Initialize views
-        getAccountsButton = findViewById(R.id.getAccountsButton);
-        getAccountSummaryButton = findViewById(R.id.getAccountSummaryButton);
-        responseText = findViewById(R.id.responseText);
+        aliasTextView = findViewById(R.id.aliasTextView);
+        idTextView = findViewById(R.id.idTextView);
+        dataLayout = findViewById(R.id.dataLayout);
+        Button getAccountDetailsButton = findViewById(R.id.getAccountDetailsButton);
 
-        // Set onClickListener for the buttons
-        getAccountsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetAccountsTask().execute();
-            }
-        });
+        // Set onClickListener for the button
+        getAccountDetailsButton.setOnClickListener(v -> getAccountDetails());
 
-        getAccountSummaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetAccountSummaryTask().execute();
-            }
-        });
+        // Call getAccountDetails when MainActivity is loaded
+        getAccountDetails();
     }
 
-    private class GetAccountsTask extends AsyncTask<Void, Void, String> {
+    private void getAccountDetails() {
+        new GetAccountDetailsTask(this).execute();
+    }
+
+    private void updateUI() {
+        if (account != null) {
+            aliasTextView.setText(account.getAlias());
+            idTextView.setText(account.getId());
+
+            dataLayout.removeAllViews();
+            addDataPoint("Guaranteed Stop Loss Order Mode", account.getGuaranteedStopLossOrderMode());
+            addDataPoint("Hedging Enabled", String.valueOf(account.isHedgingEnabled()));
+            addDataPoint("Created Time", account.getCreatedTime());
+            addDataPoint("Currency", account.getCurrency());
+            addDataPoint("Created By User ID", String.valueOf(account.getCreatedByUserID()));
+            addDataPoint("Margin Rate", account.getMarginRate());
+            addDataPoint("Last Transaction ID", account.getLastTransactionID());
+            addDataPoint("Balance", account.getBalance());
+            addDataPoint("Open Trade Count", String.valueOf(account.getOpenTradeCount()));
+            addDataPoint("Open Position Count", String.valueOf(account.getOpenPositionCount()));
+            addDataPoint("Pending Order Count", String.valueOf(account.getPendingOrderCount()));
+            addDataPoint("P/L", account.getPl());
+            addDataPoint("Resettable P/L", account.getResettablePL());
+            addDataPoint("Resettable P/L Time", account.getResettablePLTime());
+            addDataPoint("Financing", account.getFinancing());
+            addDataPoint("Commission", account.getCommission());
+            addDataPoint("Dividend Adjustment", account.getDividendAdjustment());
+            addDataPoint("Guaranteed Execution Fees", account.getGuaranteedExecutionFees());
+            addDataPoint("Unrealized P/L", account.getUnrealizedPL());
+            addDataPoint("NAV", account.getNAV());
+            addDataPoint("Margin Used", account.getMarginUsed());
+            addDataPoint("Margin Available", account.getMarginAvailable());
+            addDataPoint("Position Value", account.getPositionValue());
+            addDataPoint("Margin Closeout Unrealized P/L", account.getMarginCloseoutUnrealizedPL());
+            addDataPoint("Margin Closeout NAV", account.getMarginCloseoutNAV());
+            addDataPoint("Margin Closeout Margin Used", account.getMarginCloseoutMarginUsed());
+            addDataPoint("Margin Closeout Position Value", account.getMarginCloseoutPositionValue());
+            addDataPoint("Margin Closeout Percent", account.getMarginCloseoutPercent());
+            addDataPoint("Withdrawal Limit", account.getWithdrawalLimit());
+            addDataPoint("Margin Call Margin Used", account.getMarginCallMarginUsed());
+            addDataPoint("Margin Call Percent", account.getMarginCallPercent());
+        }
+    }
+
+    private void addDataPoint(String label, String value) {
+        View dataPointView = getLayoutInflater().inflate(R.layout.data_point, null);
+        TextView labelTextView = dataPointView.findViewById(R.id.labelTextView);
+        TextView valueTextView = dataPointView.findViewById(R.id.valueTextView);
+        labelTextView.setText(label);
+        valueTextView.setText(value);
+        dataLayout.addView(dataPointView);
+    }
+
+    private static class GetAccountDetailsTask extends AsyncTask<Void, Void, String> {
+
+        private final Context context;
+
+        GetAccountDetailsTask(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuilder response = new StringBuilder();
             try {
-                URL url = new URL("https://api-fxpractice.oanda.com/v3/accounts");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Authorization", "Bearer " + ACCESS_TOKEN);
-
-                int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Response Code: " + responseCode);
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
+                MainActivity activity = (MainActivity) context;
+                return activity.accountAPI.getAccountDetails();
             } catch (Exception e) {
-                Log.e(TAG, "Error: ", e);
-                response.append("Error: ").append(e.getMessage());
+                return "Error: " + e.getMessage();
             }
-            return response.toString();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (result != null) {
-                responseText.setText(result);
-            } else {
-                responseText.setText("Error: Response is null");
-            }
-        }
-    }
-
-    private class GetAccountSummaryTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            StringBuilder response = new StringBuilder();
+            Log.d("GetAccountDetailsTask", "Account Details: " + result);
             try {
-                URL url = new URL("https://api-fxpractice.oanda.com/v3/accounts");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Authorization", "Bearer " + ACCESS_TOKEN);
-
-                int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Response Code: " + responseCode);
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                // Parse the accounts response to get account IDs
-                JSONObject jsonResponse = new JSONObject(response.toString());
-                JSONArray accounts = jsonResponse.getJSONArray("accounts");
-
-                // Fetch account summary for each account ID
-                StringBuilder summaries = new StringBuilder();
-                for (int i = 0; i < accounts.length(); i++) {
-                    String accountId = accounts.getJSONObject(i).getString("id");
-                    summaries.append(getAccountSummary(accountId)).append("\n\n");
-                }
-                return summaries.toString();
-
+                JSONObject jsonResponse = new JSONObject(result);
+                JSONObject accountJson = jsonResponse.getJSONObject("account");
+                ((MainActivity) context).account = new Account(accountJson);
+                ((MainActivity) context).updateUI();
             } catch (Exception e) {
-                Log.e(TAG, "Error: ", e);
-                response.append("Error: ").append(e.getMessage());
+                Log.d("GetAccountDetailsTask", "Error parsing account details: " + e.getMessage());
             }
-            return response.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result != null) {
-                responseText.setText(result);
-            } else {
-                responseText.setText("Error: Response is null");
-            }
-        }
-
-        private String getAccountSummary(String accountId) {
-            StringBuilder response = new StringBuilder();
-            try {
-                URL url = new URL("https://api-fxpractice.oanda.com/v3/accounts/" + accountId + "/summary");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Authorization", "Bearer " + ACCESS_TOKEN);
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-            } catch (Exception e) {
-                Log.e(TAG, "Error: ", e);
-                response.append("Error: ").append(e.getMessage());
-            }
-            return response.toString();
         }
     }
 }

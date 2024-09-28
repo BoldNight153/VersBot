@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/darkBackground">
 
-    <Button
-        android:id="@+id/getAccountsButton"
+    <TextView
+        android:id="@+id/aliasTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Accounts"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:text="Account Alias"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/getAccountSummaryButton"
+    <TextView
+        android:id="@+id/idTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Account Summary"
-        android:layout_below="@id/getAccountsButton"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:text="Account ID"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/getAccountSummaryButton"
-        android:layout_marginTop="20dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/responseText"
+        <LinearLayout
+            android:id="@+id/dataLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:scrollbars="vertical"/>
+            android:orientation="vertical"/>
+
     </ScrollView>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/getAccountDetailsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Account Details"
+        android:layout_marginTop="16dp"
+        android:background="@color/buttonBackground"
+        android:textColor="@color/white"/>
+</LinearLayout>
