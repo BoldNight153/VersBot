@@ -6,44 +6,12 @@
     android:padding="16dp"
     android:background="@color/darkBackground">
 
-    <TextView
-        android:id="@+id/aliasTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Account Alias"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/idTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Account ID"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:layout_marginBottom="8dp"/>
-
-    <ScrollView
+    <ExpandableListView
+        android:id="@+id/expandableListView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:id="@+id/dataLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/getAccountDetailsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Account Details"
-        android:layout_marginTop="16dp"
-        android:background="@color/buttonBackground"
-        android:textColor="@color/white"/>
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+        android:childIndicator="@android:color/transparent"/>
 </LinearLayout>

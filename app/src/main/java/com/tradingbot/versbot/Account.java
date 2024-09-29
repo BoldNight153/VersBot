@@ -42,6 +42,7 @@ public class Account {
     private String withdrawalLimit;
     private String marginCallMarginUsed;
     private String marginCallPercent;
+    private JSONObject accountInstruments;
 
     public Account(JSONObject jsonObject) throws JSONException {
         this.id = jsonObject.getString("id");
@@ -366,6 +367,14 @@ public class Account {
         this.marginCallPercent = marginCallPercent;
     }
 
+    public JSONObject getAccountInstruments() {
+        return accountInstruments;
+    }
+
+    public void setAccountInstruments(JSONObject accountInstruments) {
+        this.accountInstruments = accountInstruments;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -404,6 +413,7 @@ public class Account {
                 ", withdrawalLimit='" + withdrawalLimit + '\'' +
                 ", marginCallMarginUsed='" + marginCallMarginUsed + '\'' +
                 ", marginCallPercent='" + marginCallPercent + '\'' +
+                //", accountInstruments=" + accountInstruments +
                 '}';
     }
 }
