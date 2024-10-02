@@ -1,8 +1,12 @@
 package com.tradingbot.versbot
 
 import android.content.Context
-import androidx.compose.foundation.layout.add
+import com.android.volley.Request
+import com.google.gson.Gson
 import java.lang.reflect.Method
+import com.tradingbot.versbot.OrderListResponse
+import com.tradingbot.versbot.PendingOrdersResponse
+import com.tradingbot.versbot.OrderDetailsResponse
 
 class OrderEndpointsImpl(
     private val context: Context,
@@ -12,6 +16,7 @@ class OrderEndpointsImpl(
     override val contentType: String = "application/json"
 
     private val requestQueue: com.android.volley.RequestQueue = com.android.volley.toolbox.Volley.newRequestQueue(context)
+    private val gson = Gson() // Added Gson instance
 
     override fun getOrderList(accountID: String) {
         val url = "$baseUrl/accounts/$accountID/orders"
@@ -19,7 +24,8 @@ class OrderEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val orderListResponse = gson.fromJson(response, OrderListResponse::class.java) // Added Gson parsing
+                println("Order List: ${orderListResponse.orders}")
             },
             { error ->
                 // Handle error
@@ -42,7 +48,8 @@ class OrderEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val pendingOrdersResponse = gson.fromJson(response, PendingOrdersResponse::class.java) // Added Gson parsing
+                println("Pending Orders: ${pendingOrdersResponse.pendingOrders}")
             },
             { error ->
                 // Handle error
@@ -65,7 +72,8 @@ class OrderEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val orderDetailsResponse = gson.fromJson(response, OrderDetailsResponse::class.java) // Added Gson parsing
+                println("Order Details: ${orderDetailsResponse.order}")
             },
             { error ->
                 // Handle error

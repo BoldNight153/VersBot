@@ -1,9 +1,8 @@
 package com.tradingbot.versbot
 
 import android.content.Context
-import androidx.compose.foundation.layout.add
 import com.android.volley.Request
-import java.lang.reflect.Method
+import com.google.gson.Gson
 
 class AccountEndpointsImpl(
     private val context: Context,
@@ -13,6 +12,7 @@ class AccountEndpointsImpl(
     override val contentType: String = "application/json"
 
     private val requestQueue: com.android.volley.RequestQueue = com.android.volley.toolbox.Volley.newRequestQueue(context)
+    private val gson = Gson()
 
     override fun getAccountList() {
         val url = "$baseUrl/accounts"
@@ -20,7 +20,8 @@ class AccountEndpointsImpl(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val accountListResponse = gson.fromJson(response, AccountListResponse::class.java)
+                println("Account List: ${accountListResponse.accounts}")
             },
             { error ->
                 // Handle error
@@ -43,7 +44,8 @@ class AccountEndpointsImpl(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val accountDetailsResponse = gson.fromJson(response, AccountDetailsResponse::class.java)
+                println("Account Details: ${accountDetailsResponse.account}")
             },
             { error ->
                 // Handle error
@@ -66,7 +68,8 @@ class AccountEndpointsImpl(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val accountSummaryResponse = gson.fromJson(response, AccountSummaryResponse::class.java)
+                println("Account Summary: ${accountSummaryResponse.account}")
             },
             { error ->
                 // Handle error
@@ -89,7 +92,8 @@ class AccountEndpointsImpl(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val accountInstrumentsResponse = gson.fromJson(response, AccountInstrumentsResponse::class.java)
+                println("Account Instruments: ${accountInstrumentsResponse.instruments}")
             },
             { error ->
                 // Handle error

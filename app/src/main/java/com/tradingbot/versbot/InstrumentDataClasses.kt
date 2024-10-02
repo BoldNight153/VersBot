@@ -1,6 +1,6 @@
 package com.tradingbot.versbot
 
-data class InstrumentCandlesResponse(
+data class CandlesResponse(
     val instrument: String,
     val granularity: String,
     val candles: List<Candle>
@@ -23,30 +23,22 @@ data class CandleStick(
 )
 
 data class OrderBookResponse(
-    val orderBook: OrderBookData,
+    val orderBook: OrderBook,
     val lastTransactionID: String
 )
 
-data class OrderBookData(
-    val instrument: String,
-    val time: String,
-    val price: String,
-    val bucketWidth: String,
-    val buckets: List<Bucket>
+data class PositionBookResponse(
+    val positionBook: PositionBook,
+    val lastTransactionID: String
 )
 
-data class Bucket(
+data class PositionBucket(
     val price: String,
     val longCountPercent: String,
     val shortCountPercent: String
 )
 
-data class PositionBookResponse(
-    val positionBook: PositionBookData,
-    val lastTransactionID: String
-)
-
-data class PositionBookData(
+data class OrderBook( // Added missing class
     val instrument: String,
     val time: String,
     val price: String,
@@ -54,8 +46,10 @@ data class PositionBookData(
     val buckets: List<PositionBucket>
 )
 
-data class PositionBucket(
+data class PositionBook( // Added missing class
+    val instrument: String,
+    val time: String,
     val price: String,
-    val longCountPercent: String,
-    val shortCountPercent: String
+    val bucketWidth: String,
+    val buckets: List<PositionBucket>
 )

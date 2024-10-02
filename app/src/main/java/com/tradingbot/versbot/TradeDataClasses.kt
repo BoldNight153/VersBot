@@ -122,6 +122,14 @@ data class CloseTradeResponse(
     val lastTransactionID: String
 )
 
+data class CloseTradesResponse(
+    val orderCreateTransaction: Transaction,
+    val orderFillTransaction: Transaction, // This will be a summary transaction
+    val orderCancelTransaction: Transaction?,
+    val relatedTransactionIDs: List<String>,
+    val lastTransactionID: String
+)
+
 data class TradeCloseDetails(
     val tradeID: String,
     val units: String,

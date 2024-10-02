@@ -42,8 +42,8 @@ data class Order(
     val replacedByOrderID: String?
 )
 
-data class PendingOrderResponse(
-    val orders: List<Order>,
+data class PendingOrdersResponse(
+    val pendingOrders: List<Order>,
     val lastTransactionID: String
 )
 

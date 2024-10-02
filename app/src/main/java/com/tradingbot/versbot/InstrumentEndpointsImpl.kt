@@ -1,7 +1,12 @@
 package com.tradingbot.versbot
 
 import android.content.Context
-import androidx.compose.foundation.layout.add
+import com.android.volley.Request
+import com.google.gson.Gson
+import com.tradingbot.versbot.AccountInstrumentsResponse
+import com.tradingbot.versbot.CandlesResponse
+import com.tradingbot.versbot.OrderBookResponse // Added import
+import com.tradingbot.versbot.PositionBookResponse // Added import
 import java.lang.reflect.Method
 
 class InstrumentEndpointsImpl(
@@ -12,6 +17,7 @@ class InstrumentEndpointsImpl(
     override val contentType: String = "application/json"
 
     private val requestQueue: com.android.volley.RequestQueue = com.android.volley.toolbox.Volley.newRequestQueue(context)
+    private val gson = Gson()
 
     override fun getInstruments(accountID: String) {
         val url = "$baseUrl/accounts/$accountID/instruments"
@@ -19,7 +25,8 @@ class InstrumentEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val instrumentsResponse = gson.fromJson(response, AccountInstrumentsResponse::class.java)
+                println("Instruments: ${instrumentsResponse.instruments}")
             },
             { error ->
                 // Handle error
@@ -42,7 +49,8 @@ class InstrumentEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val candlesResponse = gson.fromJson(response, CandlesResponse::class.java)
+                println("Candles: ${candlesResponse.candles}")
             },
             { error ->
                 // Handle error
@@ -65,7 +73,8 @@ class InstrumentEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val orderBookResponse = gson.fromJson(response, OrderBookResponse::class.java)
+                println("Order Book: ${orderBookResponse.orderBook}")
             },
             { error ->
                 // Handle error
@@ -88,7 +97,8 @@ class InstrumentEndpointsImpl(
             Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val positionBookResponse = gson.fromJson(response, PositionBookResponse::class.java)
+                println("Position Book: ${positionBookResponse.positionBook}")
             },
             { error ->
                 // Handle error
