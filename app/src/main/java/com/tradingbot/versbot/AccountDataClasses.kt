@@ -112,12 +112,12 @@ data class Instrument(
     val commission: String
 )
 
-data class ConfigureAccountResponse(
-    val clientConfigureTransaction: ClientConfigureTransaction,
+data class PatchAccountConfigurationResponse(
+    val clientConfigureTransaction: PatchAccountConfigurationTransaction,
     val lastTransactionID: String
 )
 
-data class ClientConfigureTransaction(
+data class PatchAccountConfigurationTransaction(
     val id: String,
     val time: String,
     val userID: Int,
@@ -127,20 +127,4 @@ data class ClientConfigureTransaction(
     val type: String,
     val alias: String,
     val marginRate: String
-)
-
-data class ChangeAccountAliasResponse(
-    val aliasChangeTransaction: AliasChangeTransaction,
-    val lastTransactionID: String
-)
-
-data class AliasChangeTransaction(
-    val id: String,
-    val time: String,
-    val userID: Int,
-    val accountID: String,
-    val batchID: String,
-    val requestID: String,
-    val type: String,
-    val alias: String
 )

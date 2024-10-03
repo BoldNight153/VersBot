@@ -2,7 +2,10 @@ package com.tradingbot.versbot
 
 import android.content.Context
 import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
+import org.json.JSONObject
 
 class AccountEndpointsImpl(
     private val context: Context,
@@ -16,7 +19,7 @@ class AccountEndpointsImpl(
 
     override fun getAccountList() {
         val url = "$baseUrl/accounts"
-        val request = object : com.android.volley.toolbox.StringRequest(
+        val request = object : StringRequest(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
@@ -40,7 +43,7 @@ class AccountEndpointsImpl(
 
     override fun getAccountDetails(accountId: String) {
         val url = "$baseUrl/accounts/$accountId"
-        val request = object : com.android.volley.toolbox.StringRequest(
+        val request = object : StringRequest(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
@@ -64,7 +67,7 @@ class AccountEndpointsImpl(
 
     override fun getAccountSummary(accountId: String) {
         val url = "$baseUrl/accounts/$accountId/summary"
-        val request = object : com.android.volley.toolbox.StringRequest(
+        val request = object : StringRequest(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
@@ -88,7 +91,7 @@ class AccountEndpointsImpl(
 
     override fun getAccountInstruments(accountId: String) {
         val url = "$baseUrl/accounts/$accountId/instruments"
-        val request = object : com.android.volley.toolbox.StringRequest(
+        val request = object : StringRequest(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
@@ -112,11 +115,27 @@ class AccountEndpointsImpl(
 
     override fun patchAccountConfiguration(accountId: String) {
         val url = "$baseUrl/accounts/$accountId/configuration"
-        // Implement API call using Volley for PATCH request
-    }
-
-    override fun postChangeAccountAlias(accountId: String) {
-        val url = "$baseUrl/accounts/$accountId/alias"
-        // Implement API call using Volley for POST request
+        val params = JSONObject()
+        // Add your parameters for the PATCH request here
+        val request = object : JsonObjectRequest(
+            Request.Method.PATCH, url, params,
+            { response ->
+                // Handle successful response
+                val patchAccountConfigurationResponse = gson.fromJson(response.toString(), PatchAccountConfigurationResponse::class.java)
+                println("Patch Account Configuration Response: $patchAccountConfigurationResponse")
+            },
+            { error ->
+                // Handle error
+                println("Error: ${error.message}")
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = contentType
+                headers["Authorization"] = "Bearer $accessToken"
+                return headers
+            }
+        }
+        requestQueue.add(request)
     }
 }

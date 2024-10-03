@@ -1,12 +1,11 @@
 package com.tradingbot.versbot
 
 import android.content.Context
-import androidx.compose.foundation.layout.add
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import java.lang.reflect.Method
+import com.google.gson.Gson
 
 class PricingEndpointsImpl(
     private val context: Context,
@@ -16,6 +15,7 @@ class PricingEndpointsImpl(
     override val contentType: String = "application/json"
 
     private val requestQueue: RequestQueue = Volley.newRequestQueue(context)
+    private val gson = Gson()
 
     override fun getPricing(accountID: String) {
         val url = "$baseUrl/accounts/$accountID/pricing"
@@ -23,7 +23,8 @@ class PricingEndpointsImpl(
             Request.Method.GET, url,
             { response ->
                 // Handle successful response
-                println("Response: $response")
+                val priceListResponse = gson.fromJson(response, PriceListResponse::class.java)
+                println("Price List: ${priceListResponse.prices}")
             },
             { error ->
                 // Handle error
