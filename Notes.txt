@@ -1,0 +1,287 @@
+Next Steps 
+- [ ] Configure API Credentials:
+    - [x] Load Credentials: In your implementation classes, load the credentials from the configuration class or file instead of using placeholder values. You can use environment variables or a properties file for this purpose.
+    - [x] Create a Configuration Class or File: Create a class or a file (e.g., OandaConfig.kt or config.properties) to store your Oanda API credentials (baseUrl and accessToken). This will help you manage and access your credentials easily.
+- [ ] Handle API Responses:
+    - [ ] Process Data: Implement the logic to process the parsed data and use it in your application. This might involve updating UI elements, storing data in a database, or performing calculations.
+    - [x] Create Data Models: Define Kotlin data classes to represent the structure of the JSON responses. This will help you work with the data in a type-safe and structured manner.
+    - [x] Parse JSON Responses: Use a JSON parsing library like Gson or Jackson to parse the responses received from the Oanda API.
+- [ ] Error Handling and Logging:
+    - [ ] Implement Robust Error Handling: Handle potential errors like network issues, invalid API credentials, or API errors gracefully. Provide informative error messages to the user.
+    - [ ] Add Logging: Use a logging library like Timber to log API requests, responses, and errors. This will help you debug issues and monitor the API interactions.
+- [ ] Testing:
+    - [ ] Write Unit Tests: Create unit tests for your implementation classes to ensure that they are working correctly.
+    - [ ] Perform Integration Tests: Test the integration of your API client with the rest of your application.
+- [ ] Integration with Your Application:
+    - [ ] Use the API Client: In your application's activities or fragments, create instances of the implementation classes and call the appropriate methods to interact with the Oanda API.
+    - [ ] Update UI: Update the UI based on the API responses.
+
+
+
+
+
+
+    Creating the UI top lvl steps:
+
+
+    - [ ] Project setup
+        - [ ] Make sure you have the latest version of Android Studio and the necessary dependencies for Jetpack Compose.
+        - [ ] Familiarize yourself with the existing data classes in the project that represent the data from the OANDA API.
+    - [ ] Create UI packages
+        - [ ] Create new packages in your project to organize your composables. For example, you could create packages named ui, screens, or components.
+    - [ ] MainActivity
+        - [ ] Create MainActivity.kt if it doesn't exist already.
+        - [ ] In onCreate, use setContent to set up the Compose content.
+        - [ ] Call your main composable function (e.g., MainScreen) within setContent.
+    - [ ] MainScreen composable
+        - [ ] Create a new file (e.g., MainScreen.kt) and define the MainScreen composable function.
+        - [ ] Fetch the account data using the AccountEndpointsImpl class.
+        - [ ] Handle the loading state while fetching data (e.g., display a loading indicator).
+        - [ ] Once the data is available, call the AccountAccordionList composable to display the accordion layout.
+    - [ ] AccountScreen composable
+        - [ ] Create a new file (e.g., AccountScreen.kt) and define the following composables:
+            - [ ] AccountAccordionList: Takes a list of Account objects and displays them in a LazyColumn.
+            - [ ] AccountAccordionItem: Represents a single accordion item using ExpansionPanel. Displays the account alias and ID in the header.
+    - [ ] AccountDetailsScreen composable
+        - [ ] Create a new file (e.g., AccountDetailsScreen.kt) and define the AccountDetailsScreen composable.
+        - [ ] This composable takes an Account object and displays its details (alias, ID, balance, etc.) in a layout of your choice (e.g., Column).
+    - [ ] Nested sections
+        - [ ] Within the AccountAccordionItem, add nested sections for Trading Bots, Positions, Orders, Trades, and Instruments.
+        - [ ] Create separate composables for each section (e.g., TradingBotList, PositionList) and call them within the ExpansionPanel body.
+    - [ ] Implement navigation
+        - [ ] If necessary, implement navigation between different screens or sections of your UI. You can use Jetpack Compose's navigation library for this.
+    - [ ] Styling and theming
+        - [ ] Customize your app's theme using Compose's theming system. Define your colors, typography, and shapes in a separate file (e.g., Theme.kt).
+    - [ ] Testing
+        - [ ] Thoroughly test your UI on different devices and screen sizes.
+        - [ ] Make sure the accordion layout works as expected and the data is displayed correctly. Remember to break down your UI into smaller, reusable composables and organize them into separate files for better maintainability. I hope this detailed outline helps you create the UI for your VersBot app. Please let me know if you have any specific questions about any of the steps or if you'd like me to provide code examples for any particular part of the UI. I will do my best to provide clear and concise responses.
+
+
+
+
+
+
+
+
+
+
+UI layout description
+
+We want the App work like an “Accordion” style list of options, data, and selections. Here is basically what we are looking for:  This will need nested expandable views (or any other views that make the most sense to make this “Accordion” style  layout) to make an “accordion” style list UI layout. You can use any type of views you would like as long as it functions like an “accordion” style list.
+
+- [ ] The First section of views will be a list of Accounts that shows the Account Alias and below that the Account ID number.
+    - [ ] Nested inside the first layer will be a list of categories Active Bots, Positions, Orders, Trades, Instruments
+        - [ ] Nested inside the Active Bots will list all of the instanciated Trading Bots with a Start and Stop Toggle (Only one should show at a time. If the bot is running then Stop should show. If the bot is not running Start should show.)
+        - [ ] Nested inside Positions should list all of the open Positions for the Account
+        - [ ] Nested inside Orders should list all of the Orders for the Account
+        - [ ] Nested inside Trades should list all of the Trades for the Account
+        - [ ] Nested inside Instruments should show all of the Instruments for the Account
+            - [ ] Nested inside each Instrument should be the Positions for that Instrument
+
+Example:
+
+- [ ] Test Account 01 101-001-12345678-001
+    - [ ] Account Details
+        - [ ] Alias: Test Account 01
+        - [ ] ID: 010-001-12345678-001
+        - [ ] Guaranteed Stop Loss: Disabled
+        - [ ] Hedging Enabled: false
+        - [ ] Etc…
+    - [ ] Trading Bots
+        - [ ] Bot_EUR/USD - START/STOP
+        - [ ] Bot_USD/AUS - START/STOP
+        - [ ] Etc…
+    - [ ] Positions
+        - [ ] Market, Units, Type, Margin(USD), Price, Current, Profit(USD), Profit(Pips), Profit(%) EUR/USD, 999, LONG, 22.211, 1.11422, 1.11171, -2.45, -24.4, -0.22% USD/AUS, 800, SHORT, 21.111, 1.11311, 1.11211, 0.10, 1.0, .10%
+    - [ ] Orders
+        - [ ] Ticket, Market, Units, Type, SL, TP, TS, Price, Current, Distance, Expiry TP:1670, EUR/USD, 999, TP, -, -, -, 1.11490, 1.11148, 35, -, ModifyBTN, CloseBTN etc…
+    - [ ] Trades
+        - [ ] Ticket, Market, Units, Type, Margin(USD), SL, TP, TS, Price, Current, Profit(USD), Profit(Pips), Profit(%) 1670, EUR/USD, 999, LONG, 22.1998, 1.11490, 1.11094, -3.17, -31.7, -28%, ModifyBTN, CloseBTN
+        - [ ] Etc...
+    - [ ] Instruments
+        - [ ] EUR/USD
+            - [ ] Bot_EUR_USD - CREATE BOT/START/STOP
+                - [ ] Positions Market, Units, Type, Margin(USD), Price, Current, Profit(USD), Profit(Pips), Profit(%) EUR/USD, 999, LONG, 22.211, 1.11422, 1.11171, -2.45, -24.4, -0.22%
+                - [ ] Orders
+                    - [ ] Ticket, Market, Units, Type, SL, TP, TS, Price, Current, Distance, Expiry TP:1670, EUR/USD, 999, TP, -, -, -, 1.11490, 1.11148, 35, -, ModifyBTN, CloseBTN
+                - [ ] Trades
+                    - [ ] Ticket, Market, Units, Type, Margin(USD), SL, TP, TS, Price, Current, Profit(USD), Profit(Pips), Profit(%) 1670, EUR/USD, 999, LONG, 22.1998, 1.11490, 1.11094, -3.17, -31.7, -28%, ModifyBTN, CloseBTN
+        - [ ] USD/AUS
+            - [ ] Bot_USD_AUS - CREATE BOT/START/STOP
+                - [ ] Positions
+                - [ ] Orders
+                - [ ] Trades
+        - [ ] Etc...
+
+
+Gemini Response to the above:  Yes, Matt, I understand the UI layout you've described. You're looking for an accordion-style list view with nested expandable sections to display information about accounts, trading bots, positions, orders, trades, and instruments. Each section can be expanded or collapsed to show or hide its contents. This type of UI is a great way to present a lot of information in a structured and organized manner without overwhelming the user. It allows users to easily navigate through the data and focus on the sections they're interested in. I can help you create this UI using Jetpack Compose. We can leverage several components and techniques to achieve the desired accordion-style layout, such as:
+LazyColumn: For efficient list rendering, especially with large datasets.
+Column and Row: For arranging elements vertically and horizontally within each section.
+ExpansionPanel: A Material Design component that provides an expandable panel with a header and content.
+Custom state management: To keep track of which sections are expanded or collapsed.
+Animation: To provide smooth transitions when expanding or collapsing sections. Would you like me to start by providing a basic code structure for the top-level accordion list, or would you prefer to focus on a specific section first, such as the account list or the nested items within an account?
+
+
+
+
+
+
+
+
+
+
+Oanda API
+
+Access token:
+47bf7d45728cd122c3502d0e9602f49c-5d2e542fdb2455494926f88c012fe544
+
+
+
+
+
+
+
+
+
+
+Oanda REST API Endpoints
+
+GET/v3/accounts
+Get a list of all Accounts authorized for the provided token.
+
+
+GET/v3/accounts/{accountID}
+Get the full details for a single Account that a client has access to. Full pending Order, open Trade and open Position representations are provided.
+
+
+GET/v3/accounts/{accountID}/summary
+Get a summary for a single Account that a client has access to.
+
+
+GET/v3/accounts/{accountID}/instruments
+Get the list of tradeable instruments for the given Account. The list of tradeable instruments is dependent on the regulatory division that the Account is located in, thus should be the same for all Accounts owned by a single user.
+
+PATCH/v3/accounts/{accountID}/configuration
+Set the client-configurable portions of an Account.
+
+
+GET/v3/accounts/{accountID}/changes
+Endpoint used to poll an Account for its current state and changes since a specified TransactionID.
+
+
+GET/v3/instruments/{instrument}/candles
+Fetch candlestick data for an instrument.
+
+
+GET/v3/instruments/{instrument}/orderBook
+Fetch an order book for an instrument.
+
+
+GET/v3/instruments/{instrument}/positionBook
+Fetch a position book for an instrument.
+
+
+POST/v3/accounts/{accountID}/orders
+Create an Order for an Account
+
+
+GET/v3/accounts/{accountID}/orders
+Get a list of Orders for an Account
+
+
+GET/v3/accounts/{accountID}/pendingOrders
+List all pending Orders in an Account
+
+
+GET/v3/accounts/{accountID}/orders/{orderSpecifier}
+Get details for a single Order in an Account
+
+
+PUT/v3/accounts/{accountID}/orders/{orderSpecifier}
+Replace an Order in an Account by simultaneously cancelling it and creating a replacement Order
+
+
+PUT/v3/accounts/{accountID}/orders/{orderSpecifier}/cancel
+Cancel a pending Order in an Account
+
+
+PUT/v3/accounts/{accountID}/orders/{orderSpecifier}/clientExtensions
+Update the Client Extensions for an Order in an Account. Do not set, modify, or delete clientExtensions if your account is associated with MT4.
+
+GET/v3/accounts/{accountID}/trades
+Get a list of Trades for an Account
+
+
+GET/v3/accounts/{accountID}/openTrades
+Get the list of open Trades for an Account
+
+
+GET/v3/accounts/{accountID}/trades/{tradeSpecifier}
+Get the details of a specific Trade in an Account
+
+
+PUT/v3/accounts/{accountID}/trades/{tradeSpecifier}/close
+Close (partially or fully) a specific open Trade in an Account
+
+
+PUT/v3/accounts/{accountID}/trades/{tradeSpecifier}/clientExtensions
+Update the Client Extensions for a Trade. Do not add, update, or delete the Client Extensions if your account is associated with MT4.
+
+
+PUT/v3/accounts/{accountID}/trades/{tradeSpecifier}/orders
+Create, replace and cancel a Trade’s dependent Orders (Take Profit, Stop Loss and Trailing Stop Loss) through the Trade itself
+
+
+GET/v3/accounts/{accountID}/positions
+List all Positions for an Account. The Positions returned are for every instrument that has had a position during the lifetime of an the Account.
+
+
+GET/v3/accounts/{accountID}/openPositions
+List all open Positions for an Account. An open Position is a Position in an Account that currently has a Trade opened for it.
+
+
+GET/v3/accounts/{accountID}/positions/{instrument}
+Get the details of a single Instrument’s Position in an Account. The Position may by open or not.
+
+
+PUT/v3/accounts/{accountID}/positions/{instrument}/close
+Closeout the open Position for a specific instrument in an Account.
+
+
+GET/v3/accounts/{accountID}/transactions
+Get a list of Transactions pages that satisfy a time-based Transaction query.
+
+
+GET/v3/accounts/{accountID}/transactions/{transactionID}
+Get the details of a single Account Transaction.
+
+
+GET/v3/accounts/{accountID}/transactions/idrange
+Get a range of Transactions for an Account based on the Transaction IDs.
+ 
+GET/v3/accounts/{accountID}/transactions/sinceid
+Get a range of Transactions for an Account starting at (but not including) a provided Transaction ID.
+
+
+GET/v3/accounts/{accountID}/transactions/stream
+Get a stream of Transactions for an Account starting from when the request is made.
+Note: This endpoint is served by the streaming URLs.
+
+
+GET/v3/accounts/{accountID}/candles/latest
+Get dancing bears and most recently completed candles within an Account for specified combinations of instrument, granularity, and price component.
+
+
+GET/v3/accounts/{accountID}/pricing
+Get pricing information for a specified list of Instruments within an Account.
+
+
+GET/v3/accounts/{accountID}/pricing/stream
+Get a stream of Account Prices starting from when the request is made. This pricing stream does not include every single price created for the Account, but instead will provide at most 4 prices per second (every 250 milliseconds) for each instrument being requested. If more than one price is created for an instrument during the 250 millisecond window, only the price in effect at the end of the window is sent. This means that during periods of rapid price movement, subscribers to this stream will not be sent every price. Pricing windows for different connections to the price stream are not all aligned in the same way (i.e. they are not all aligned to the top of the second). This means that during periods of rapid price movement, different subscribers may observe different prices depending on their alignment.
+Note: This endpoint is served by the streaming URLs.
+
+
+GET/v3/accounts/{accountID}/instruments/{instrument}/candles
+Fetch candlestick data for an instrument.
+
+
