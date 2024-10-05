@@ -1,3 +1,6 @@
+Notes to Collaborate between Mac and Android phone
+
+
 Next Steps 
 - [ ] Configure API Credentials:
     - [x] Load Credentials: In your implementation classes, load the credentials from the configuration class or file instead of using placeholder values. You can use environment variables or a properties file for this purpose.
