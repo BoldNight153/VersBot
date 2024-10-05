@@ -1,4 +1,4 @@
-package com.tradingbot.versbot
+package com.tradingbot.versbot.oandaapi.config
 
 object OandaConfig {
     const val BASE_URL = "\thttps://api-fxpractice.oanda.com"
